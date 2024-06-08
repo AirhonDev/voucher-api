@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\User\GetUserController;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ Route::get('/', function () {
 Route::prefix('auth')->group(function () {
     Route::post('/login', LoginController::class);
     Route::post('/register', RegisterController::class);
+    Route::post('/logout', LogoutController::class)->middleware('auth:sanctum');
 });
 
 Route::middleware('auth:sanctum')->group(function () {

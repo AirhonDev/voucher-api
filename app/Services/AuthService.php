@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\User\UserRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService
@@ -28,5 +29,11 @@ class AuthService
         $user->token = $token;
 
         return $user;
+    }
+
+    public function logoutUser(): void
+    {
+        $user = Auth::user();
+        $user->currentAccessToken()->delete();
     }
 }
