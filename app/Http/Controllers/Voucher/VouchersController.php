@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Dto\Voucher\VoucherFilterDto;
 use App\Http\Requests\Voucher\CreateVoucherRequest;
 use App\Http\Resources\VoucherResource;
+use App\Models\Voucher;
 use App\Repositories\Voucher\VoucherRepositoryInterface;
 use App\Services\VoucherService;
 use Illuminate\Http\Request;
@@ -43,6 +44,11 @@ class VouchersController extends Controller
                 expiresAt: new Carbon($request->expires_at)
             );
 
+        return new VoucherResource($voucher);
+    }
+
+    public function show(Voucher $voucher)
+    {
         return new VoucherResource($voucher);
     }
 }

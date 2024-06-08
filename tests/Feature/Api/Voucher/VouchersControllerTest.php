@@ -149,4 +149,23 @@ class VouchersControllerTest extends TestCase
         $this->assertNotNull($voucher->code);
         $this->assertNotNull($voucher->expires_at);
     }
+
+    public function test_should_show_voucher()
+    {
+        $voucher = Voucher::factory()->create(['user_id' => $this->user->id]);
+
+        $response = $this->getJson('/vouchers/' . $voucher->id);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'code',
+                    'expires_at',
+                    'claimed_at',
+                    'created_at',
+                    'updated_at',
+                ]
+            ]);
+    }
 }
