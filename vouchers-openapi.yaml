@@ -1,0 +1,507 @@
+openapi: 3.0.0
+info:
+  title: Vouchers API
+  description: API for managing vouchers
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: The user's username
+                password:
+                  type: string
+                  description: The user's password
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                    description: The user's ID
+                  first_name:
+                    type: string
+                    example: airhon
+                    description: The user's first name
+                  last_name:
+                    type: string
+                    example: cortez
+                    description: The user's last name
+                  username:
+                    type: string
+                    example: test_airhon
+                    description: The user's username
+                  email:
+                    type: string
+                    example: cortezairhoncarlo@gmail.com
+                    description: The user's email
+                  token:
+                    type: string
+                    example: 1|h99qNNSZe6lZ60H7sQJpfdg4bD8J7zyFXxVuYnHh90fb78c5
+                    description: The authentication token
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: 2024-06-08T09:43:53.000000Z
+                    description: The timestamp when the user was created
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: 2024-06-08T09:43:53.000000Z
+                    description: The timestamp when the user was last updated
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                  description: The user's email
+                first_name:
+                  type: string
+                  example: John
+                  description: The user's first name
+                last_name:
+                  type: string
+                  example: Doe
+                  description: The user's last name
+                username:
+                  type: string
+                  example: johndoe
+                  description: The user's username
+                password:
+                  type: string
+                  format: password
+                  example: password123
+                  description: The user's password
+              required:
+                - email
+                - first_name
+                - last_name
+                - username
+                - password
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                    description: The user's ID
+                  email:
+                    type: string
+                    format: email
+                    example: user@example.com
+                    description: The user's email
+                  first_name:
+                    type: string
+                    example: John
+                    description: The user's first name
+                  last_name:
+                    type: string
+                    example: Doe
+                    description: The user's last name
+                  username:
+                    type: string
+                    example: johndoe
+                    description: The user's username
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: 2024-06-08T09:43:53.000000Z
+                    description: The timestamp when the user was created
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: 2024-06-08T09:43:53.000000Z
+                    description: The timestamp when the user was last updated
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+
+  /auth/logout:
+    post:
+      summary: Logout the authenticated user
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Successfully logged out
+        '401':
+          description: Unauthorized
+
+  /vouchers:
+    get:
+      tags:
+        - Vouchers
+      summary: Get all vouchers
+      responses:
+        '200':
+          description: Successfully fetched all vouchers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The voucher's ID
+                        code:
+                          type: string
+                          description: The voucher's code
+                        discount:
+                          type: string
+                          nullable: true
+                          description: The voucher's discount
+                        expires_at:
+                          type: string
+                          format: date-time
+                          description: The voucher's expiration timestamp
+                        claimed_at:
+                          type: string
+                          format: date-time
+                          nullable: true
+                          description: The voucher's claimed timestamp
+                        created_at:
+                          type: string
+                          format: date-time
+                          description: The voucher's creation timestamp
+                        updated_at:
+                          type: string
+                          format: date-time
+                          description: The voucher's last update timestamp
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        format: uri
+                        description: The first page link
+                      last:
+                        type: string
+                        format: uri
+                        description: The last page link
+                      prev:
+                        type: string
+                        format: uri
+                        nullable: true
+                        description: The previous page link
+                      next:
+                        type: string
+                        format: uri
+                        nullable: true
+                        description: The next page link
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        description: The current page number
+                      from:
+                        type: integer
+                        description: The starting item number
+                      last_page:
+                        type: integer
+                        description: The last page number
+                      links:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              format: uri
+                              nullable: true
+                              description: The URL of the page
+                            label:
+                              type: string
+                              description: The label of the page
+                            active:
+                              type: boolean
+                              description: Whether the page is active
+                      path:
+                        type: string
+                        format: uri
+                        description: The base path of the pagination
+                      per_page:
+                        type: integer
+                        description: The number of items per page
+                      to:
+                        type: integer
+                        description: The ending item number
+                      total:
+                        type: integer
+                        description: The total number of items
+    post:
+      tags:
+        - Vouchers
+      summary: Create a new voucher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  nullable: true
+                  description: The voucher's code
+                expires_at:
+                  type: string
+                  format: date
+                  nullable: true
+                  description: The expiration date of the voucher
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 13
+                      code:
+                        type: string
+                        example: "test5"
+                      discount:
+                        type: string
+                        nullable: true
+                        example: null
+                      expires_at:
+                        type: string
+                        format: date-time
+                        example: "2024-06-10 10:11:51"
+                      claimed_at:
+                        type: string
+                        nullable: true
+                        example: null
+                      created_at:
+                        type: string
+                        format: date-time
+                        example: "2024-06-08T11:27:24.000000Z"
+                      updated_at:
+                        type: string
+                        format: date-time
+                        example: "2024-06-08T11:27:24.000000Z"
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The given data was invalid."
+                    description: Error message
+                  errors:
+                    type: object
+                    properties:
+                      code:
+                        type: array
+                        items:
+                          type: string
+                          example: "The code field is required."
+                      expires_at:
+                        type: array
+                        items:
+                          type: string
+                          example: "The expires_at field must be a valid date."
+  
+  /vouchers/{id}:
+    get:
+      tags:
+        - Vouchers
+      summary: Get a voucher by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the voucher
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      code:
+                        type: string
+                        example: "RKN1!"
+                      discount:
+                        type: string
+                        nullable: true
+                        example: null
+                      expires_at:
+                        type: string
+                        format: date-time
+                        example: "2024-06-15 09:43:53"
+                      claimed_at:
+                        type: string
+                        format: date-time
+                        example: "2024-06-08 11:29:01"
+                      created_at:
+                        type: string
+                        format: date-time
+                        example: "2024-06-08T09:43:53.000000Z"
+                      updated_at:
+                        type: string
+                        format: date-time
+                        example: "2024-06-08T11:29:01.000000Z"
+          
+  /vouchers/claim:
+    post:
+      tags:
+        - Vouchers
+      summary: Claim a voucher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  example: "RKN1L"
+                  description: The voucher's code
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      code:
+                        type: string
+                        example: "RKN1!"
+                      discount:
+                        type: string
+                        nullable: true
+                        example: null
+                      expires_at:
+                        type: string
+                        format: date-time
+                        example: "2024-06-15 09:43:53"
+                      claimed_at:
+                        type: string
+                        format: date-time
+                        example: "2024-06-08 11:29:01"
+                      created_at:
+                        type: string
+                        format: date-time
+                        example: "2024-06-08T09:43:53.000000Z"
+                      updated_at:
+                        type: string
+                        format: date-time
+                        example: "2024-06-08T11:29:01.000000Z"
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The voucher has already been claimed."
+                    description: Error message
+                  errors:
+                    type: object
+                    properties:
+                      code:
+                        type: array
+                        items:
+                          type: string
+                          example: "The voucher has already been claimed."
