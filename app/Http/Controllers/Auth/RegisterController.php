@@ -6,13 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Dto\User\UserDto;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\UserResource;
+use App\Notifications\WelcomeEmail;
 use App\Repositories\User\UserRepositoryInterface;
-use Illuminate\Http\Request;
+use App\Services\VoucherService;
+use Illuminate\Http\JsonResponse;
 
 class RegisterController extends Controller
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository
+        private UserRepositoryInterface $userRepository,
+        private VoucherService $voucherService
     ) {
     }
 
@@ -28,6 +31,14 @@ class RegisterController extends Controller
 
         $user = $this->userRepository->createUser($userDto);
 
-        return new UserResource($user);
+        $voucher = $this->voucherService->createVoucher(
+            user: $user
+        );
+
+        $user->notify(new WelcomeEmail($voucher->code));
+
+        return (new UserResource($user))
+            ->response()
+            ->setStatusCode(JsonResponse::HTTP_CREATED);
     }
 }

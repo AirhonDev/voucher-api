@@ -71,6 +71,7 @@ class LoginControllerTest extends TestCase
         $user = Mockery::mock(User::class)->makePartial();
         $user->username = 'testuser';
         $user->password = bcrypt('password123');
+        $user->token = 'mocked-token'; // Set the token on the user model
 
         $authService = Mockery::mock(AuthService::class);
         $authService->shouldReceive('authenticateUser')
@@ -91,6 +92,7 @@ class LoginControllerTest extends TestCase
             'password' => 'password123',
         ]);
 
+        // Output the response content for debugging
         $response->assertStatus(200)
             ->assertJsonFragment(['token' => 'mocked-token']);
     }
