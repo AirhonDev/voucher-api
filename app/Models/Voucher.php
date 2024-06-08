@@ -14,10 +14,12 @@ class Voucher extends Model
         'user_id',
         'code',
         'claimed_at',
+        'expires_at',
     ];
 
     protected $dates = [
         'claimed_at',
+        'expires_at',
     ];
 
     /**

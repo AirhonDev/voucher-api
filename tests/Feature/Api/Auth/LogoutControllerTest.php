@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\Auth;
+namespace Tests\Feature\Api\Auth;
 
 use App\Models\Sanctum\PersonalAccessToken;
 use App\Repositories\User\UserRepositoryInterface;

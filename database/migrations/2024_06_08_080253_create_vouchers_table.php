@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('vouchers', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->timestamp('expires_at');
             $table->timestamp('claimed_at')->nullable();
             $table->timestamps();
 

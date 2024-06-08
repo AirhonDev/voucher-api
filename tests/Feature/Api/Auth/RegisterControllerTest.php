@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Api\Auth;
 
 use App\Http\Dto\User\UserDto;
 use App\Http\Requests\Auth\RegisterRequest;

@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Http\Dto\Voucher\CreateVoucherDto;
+use App\Http\Dto\Voucher\UpdateVoucherDto;
 use App\Models\User;
 use App\Models\Voucher;
 use App\Repositories\Voucher\VoucherRepositoryInterface;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class VoucherService
@@ -14,12 +17,19 @@ class VoucherService
     ) {
     }
 
-    public function createVoucher(User $user): Voucher
-    {
-        $code = $this->generateUniqueCode();
+    public function createVoucher(
+        User $user,
+        ?string $code = null,
+        ?Carbon $expiresAt = null
+    ): Voucher {
+        $voucher = new CreateVoucherDto(
+            userId: $user->id,
+            code: $code ?? $this->generateUniqueCode(),
+            expiresAt: $expiresAt ?? Carbon::now()->addDays(7)
+        );
+
         return $this->voucherRepository->createVoucher(
-            user: $user,
-            code: $code
+            voucher: $voucher
         );
     }
 
@@ -32,5 +42,16 @@ class VoucherService
         ));
 
         return $code;
+    }
+
+    public function claimVoucher(string $code): Voucher
+    {
+        $voucher = $this->voucherRepository->findByCode($code);
+
+        $this->voucherRepository->updateVoucher($voucher, new UpdateVoucherDto(
+            claimedAt: Carbon::now()
+        ));
+
+        return $voucher;
     }
 }
