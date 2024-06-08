@@ -218,10 +218,6 @@ paths:
                         code:
                           type: string
                           description: The voucher's code
-                        discount:
-                          type: string
-                          nullable: true
-                          description: The voucher's discount
                         expires_at:
                           type: string
                           format: date-time
@@ -338,10 +334,6 @@ paths:
                       code:
                         type: string
                         example: "test5"
-                      discount:
-                        type: string
-                        nullable: true
-                        example: null
                       expires_at:
                         type: string
                         format: date-time
@@ -412,10 +404,6 @@ paths:
                       code:
                         type: string
                         example: "RKN1!"
-                      discount:
-                        type: string
-                        nullable: true
-                        example: null
                       expires_at:
                         type: string
                         format: date-time
@@ -466,10 +454,6 @@ paths:
                       code:
                         type: string
                         example: "RKN1!"
-                      discount:
-                        type: string
-                        nullable: true
-                        example: null
                       expires_at:
                         type: string
                         format: date-time
